@@ -1,6 +1,6 @@
 services:
   ghost:
-    image: ghost:alpine
+    image: ghost:5
     container_name: ghost-dev
     restart: unless-stopped
     ports:
@@ -14,7 +14,7 @@ services:
       # URL Configuration
       url: ${GHOST_URL:-http://localhost:3001}
       # Development specific settings
-      logging__transports: '[{"transport":"stdout","level":"info"}]'
+      # logging__transports: '[{"transport":"stdout","level":"info"}]'
     volumes:
       # Map ghost content directory for persistence
       - ghost_content:/var/lib/ghost/content

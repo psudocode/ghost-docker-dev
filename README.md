@@ -188,7 +188,31 @@ docker cp ./backup-20231215.tar.gz ghost-dev:/tmp/
 docker-compose exec ghost tar -xzf /tmp/backup-20231215.tar.gz -C /var/lib/ghost/content
 ```
 
-## 📁 Project Structure
+## � Demo Content
+
+### Dummy Posts Import
+
+The `dummy-posts/` directory contains a sample Ghost export file that can be imported to quickly populate your development site with demo content:
+
+```
+dummy-posts/
+└── ghost-demo-content.json    # Sample Ghost export file for demo content
+```
+
+**To import demo content:**
+
+1. Start your Ghost development environment
+2. Go to the Ghost Admin panel: http://localhost:3001/ghost
+3. Navigate to **Settings** → **Labs** → **Import content**
+4. Upload the `dummy-posts/ghost-demo-content.json` file
+5. The demo posts, pages, and settings will be imported
+
+This is especially useful for:
+- Testing themes with sample content
+- Demonstrating site functionality
+- Quick development setup with realistic data
+
+## �📁 Project Structure
 
 ```
 ghost-docker-dev/
@@ -199,6 +223,8 @@ ghost-docker-dev/
 ├── ghost-dev.sh          # Helper script for development
 ├── setup.sh              # Interactive setup script
 ├── validate-setup.sh     # Docker setup validation script
+├── dummy-posts/          # Demo content for import
+│   └── ghost-demo-content.json
 ├── README.md             # This file
 ├── LICENSE               # MIT License
 ├── CONTRIBUTING.md       # Contribution guidelines
