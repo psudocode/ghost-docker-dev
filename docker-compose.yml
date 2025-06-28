@@ -1,0 +1,59 @@
+services:
+  ghost:
+    image: ghost:alpine
+    container_name: ghost-dev
+    restart: unless-stopped
+    ports:
+      - "${GHOST_PORT:-3001}:2368"
+    environment:
+      # Ghost Configuration
+      NODE_ENV: ${NODE_ENV:-development}
+      # Database Configuration (SQLite for development)
+      database__client: ${DATABASE_CLIENT:-sqlite3}
+      database__connection__filename: ${DATABASE_FILENAME:-/var/lib/ghost/content/data/ghost.db}
+      # URL Configuration
+      url: ${GHOST_URL:-http://localhost:3001}
+      # Development specific settings
+      logging__level: ${LOG_LEVEL:-info}
+      logging__transports: ${LOGGING_TRANSPORTS:-stdout}
+    volumes:
+      # Map ghost content directory for persistence
+      - ghost_content:/var/lib/ghost/content
+      # Map your theme directory to the themes folder (uncomment and modify path)
+      # - ${THEME_PATH}:/var/lib/ghost/content/themes/${THEME_NAME}
+      # Optional: Map additional development folders
+      - ./logs:/var/lib/ghost/logs
+    networks:
+      - ghost-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:2368/ghost/api/v4/admin/site/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Optional: Add a database browser for SQLite (useful for development)
+  sqlite-browser:
+    image: coleifer/sqlite-web
+    container_name: ghost-sqlite-browser
+    restart: unless-stopped
+    ports:
+      - "${SQLITE_BROWSER_PORT:-8080}:8080"
+    volumes:
+      - ghost_content:/data
+    environment:
+      SQLITE_DATABASE: /data/data/ghost.db
+    networks:
+      - ghost-network
+    depends_on:
+      - ghost
+    profiles:
+      - tools
+
+volumes:
+  ghost_content:
+    driver: local
+
+networks:
+  ghost-network:
+    driver: bridge
